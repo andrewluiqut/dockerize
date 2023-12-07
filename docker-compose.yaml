@@ -1,0 +1,48 @@
+version: '3'
+services:
+    rosbase:
+        build:
+            context: ./docker/rosbase
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: rosbase
+        container_name: rosbase
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=true
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        command: bash
+    armer:
+        extends: 
+            service: rosbase
+        image: armer
+        container_name: armer
+        build:
+            context: ./docker/armer
+            dockerfile: Dockerfile
+        command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
+        # command: bash
+    vision:
+        image: nvidia/cudagl:11.3.0-devel
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                        - count: 1
+                        - capabilities: [gpu]
+        command: nvidia-smi
+

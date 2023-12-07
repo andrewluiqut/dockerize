@@ -1,0 +1,25 @@
+version: '3'
+services:
+    dev:
+        image: armer
+        container_name: dev
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        hostname: armtest
+        user: qcr
+        working_dir: /home/qcr
+        volumes:
+            # - /home/$USER:/home/$USER
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - /home/$USER/armtest_ws:/home/qcr/armtest_ws
+        command: bash
+

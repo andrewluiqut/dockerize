@@ -1,0 +1,21 @@
+version: '3'
+services:
+    armer:
+        build: . 
+        image: armer-ros
+        # image: osrf/ros:noetic-desktop-full
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+        network_mode: host
+        working_dir: /home/qcr
+        volumes:
+            - /etc/group:/etc/group:ro
+            - /etc/passwd:/etc/passwd:ro
+            - /etc/shadow:/etc/shadow:ro
+            - /etc/sudoers.d:/etc/sudoers.d:ro
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+        command: bash
