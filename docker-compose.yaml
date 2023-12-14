@@ -14,7 +14,7 @@ services:
         environment:
             - DISPLAY
             - QT_X11_NO_MITSHM=1
-            - ROS_MASTER=true
+            - ROS_MASTER=false
             - ROS_MASTER_URI=http://localhost:11311
         network_mode: host
         ipc: host
@@ -35,14 +35,51 @@ services:
             dockerfile: Dockerfile
         command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
         # command: bash
-    vision:
-        image: nvidia/cudagl:11.3.0-devel
+    nvidia:
+        # image: nvidia/cudagl:11.3.0-devel
+        image: nvidia/cudagl:11.1.1-base-ubuntu20.04
         deploy:
             resources:
                 reservations:
                     devices:
                         - driver: nvidia
-                        - count: 1
-                        - capabilities: [gpu]
+                          count: 1
+                          capabilities: [gpu]
         command: nvidia-smi
+    rosbase-gpu:
+        build:
+            context: ./docker/rosbase
+            dockerfile: Dockerfile.nvidia
+            args: 
+                USER: qcr
+        image: rosbase-gpu
+        container_name: rosbase-gpu
+    move-it:
+        build:
+            context: ./docker/move-it
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: move-it
+        container_name: move-it
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=false
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        command:
+            roslaunch panda_moveit_config demo.launch rviz_tutorial:=true
 

@@ -1,11 +1,30 @@
-ARG ROS_DISTRO=noetic
+FROM nvidia/cudagl:11.1.1-base-ubuntu20.04
 
-FROM osrf/ros:${ROS_DISTRO}-desktop-full
-LABEL author "Andrew Lui <luia2@qut.edu.au>"
+ARG ROS_DISTRO=noetic
+ENV ROS_DISTRO=${ROS_DISTRO}
+# install initial packages
+RUN apt-get update && apt-get install -y locales lsb-release
+RUN dpkg-reconfigure locales
+RUN apt-get install -y curl sudo
+# set locales
+RUN sudo locale-gen en_US.UTF-8  
+ENV LANG en_US.UTF-8  
+ENV LANGUAGE en_US:en  
+ENV LC_ALL en_US.UTF-8
+
+# accept software from ros
+RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+# install keys
+RUN curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -
+# install ros noetic
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends ros-${ROS_DISTRO}-desktop-full
+RUN apt-get install -y --no-install-recommends python3-rosdep
+RUN rosdep init \
+ && rosdep fix-permissions \
+ && rosdep update
 
 ARG USER=qcr
 ENV USER=${USER}
-ENV ROS_DISTRO=${ROS_DISTRO}
 
 # update apt-get and add user 'qcr' grant sudo privilege
 RUN apt-get update && \
@@ -54,11 +73,7 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
 RUN sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 RUN rm ./google-chrome-stable_current_amd64.deb
 
-# set locales
-RUN sudo locale-gen en_US.UTF-8  
-ENV LANG en_US.UTF-8  
-ENV LANGUAGE en_US:en  
-ENV LC_ALL en_US.UTF-8
+
 
 # configuration for terminator
 RUN mkdir -p /home/${USER}/.config/terminator
@@ -66,7 +81,7 @@ COPY assets/terminator/terminator_config.txt /home/qcr/.config/terminator/config
 COPY assets/terminator/terminator_background_ref.png /home/qcr/.config/terminator/background_ref.png
 
 # install the qcr banner
-COPY assets/banner.sh /usr/local/bin/banner
+COPY assets/banner.sh /usr/local/bin/banner 
 
 # modify the login script
 RUN echo "source banner" >> ~/.bashrc
