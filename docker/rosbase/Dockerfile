@@ -29,12 +29,15 @@ terminator \
 tmux
 
 # install base packages
-RUN sudo apt-get install -y \
+RUN sudo apt-get update && sudo apt-get install -y \
 lsb-release \
 git \
 openssh-server \
 ca-certificates \
-net-tools
+net-tools \
+vim
+
+RUN git config --global core.editor "vim"
 
 RUN sudo apt-get install -y \
 locales \
@@ -43,11 +46,15 @@ curl \
 dbus \
 htop \
 figlet \
-build-essential 
+build-essential \
+gdb
 
 # install python
 RUN sudo apt-get install -y \
 python3-pip 
+
+# install jypyter-ros for running ros in jupyter notebook
+RUN pip install numpy==1.24.4 notebook==6.5.5 jupyros
 
 # install chrome
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb

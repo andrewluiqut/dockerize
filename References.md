@@ -21,3 +21,7 @@ https://github.com/lzptr/VS_Code_ROS
 # ROS Indigo Docker Packages
 
 https://github.com/toddsampson/ros-docker/tree/master
+
+# Compass Setup Robot Model URDF Example
+
+https://gramaziokohler.github.io/compas_fab/0.21.1/examples/03_backends_ros/08_ros_create_moveit_package_from_custom_urdf.html
