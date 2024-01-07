@@ -1,4 +1,4 @@
-ARG ROS_DISTRO=noetic
+ARG ROS_DISTRO=humble
 
 FROM osrf/ros:${ROS_DISTRO}-desktop-full
 LABEL author "Andrew Lui <luia2@qut.edu.au>"

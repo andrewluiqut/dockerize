@@ -10,15 +10,18 @@ SHELL ["/bin/bash", "-c"]
 RUN sudo apt-get update
 RUN sudo apt-get install ros-noetic-moveit -y
 
+RUN pip install py-trees==2.2.3
+
 # install py_trees, py-trees-msgs and rqt-py-trees are relevant in ROS 1 only
 # RUN sudo apt-get install \
 #     ros-${ROS_DISTRO}-py-trees \
 #     ros-${ROS_DISTRO}-py-trees-msgs \
 #     ros-${ROS_DISTRO}-py-trees-ros \
 #     ros-${ROS_DISTRO}-rqt-py-trees -y
-RUN pip install py-trees==2.2.3
+RUN sudo apt-get install ros-${ROS_DISTRO}-rqt-py-trees -y
 
 # install other packages (robot specific)
+# RUN sudo apt-get install ros-${ROS_DISTRO}-universal-robots -y
 RUN sudo apt-get install ros-${ROS_DISTRO}-ur10-moveit-config -y
 
 # workspace create and make for moveit_ws 
