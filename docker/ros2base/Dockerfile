@@ -11,7 +11,7 @@ ARG USER=qcr
 ENV USER=${USER}
 ENV ROS_DISTRO=${ROS_DISTRO}
 
-# update apt-get and add user 'qcr' grant sudo privilege
+# update apt-get, add user 'qcr', and grant sudo privilege
 RUN apt-get update && \
     apt-get install -y sudo && \
     adduser --disabled-password --gecos "" qcr  && \
@@ -32,7 +32,7 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 terminator \
 tmux
 
-# install base packages
+# install basic packages
 RUN sudo apt-get update && sudo apt-get install -y \
 lsb-release \
 git \
@@ -54,7 +54,7 @@ build-essential \
 cmake \
 gdb
 
-# install python
+# install python development packages
 RUN sudo apt-get install -y \
 python3-pip \
 python3-rosdep \
