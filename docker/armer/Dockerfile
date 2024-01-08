@@ -1,3 +1,9 @@
+# Copyright 2024 - Andrew Kwok Fai LUI, Robotics and Autonomous System Group,
+# Research Engineering Facility, RI
+# the Queensland University of Technology
+
+ARG ROS_DISTRO=noetic
+
 FROM rosbase
 LABEL author "Andrew Lui <luia2@qut.edu.au>"
 

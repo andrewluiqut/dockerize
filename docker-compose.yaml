@@ -1,3 +1,7 @@
+# Copyright 2024 - Andrew Kwok Fai LUI, Robotics and Autonomous System Group,
+# Research Engineering Facility, RI
+# the Queensland University of Technology
+
 version: '3'
 services:
     rosbase:
@@ -54,14 +58,72 @@ services:
                 USER: qcr
         image: rosbase-gpu
         container_name: rosbase-gpu
-    move-it:
+    moveit:
         build:
-            context: ./docker/move-it
+            context: ./docker/moveit
             dockerfile: Dockerfile
             args: 
                 USER: qcr
-        image: move-it
-        container_name: move-it
+        image: moveit
+        container_name: moveit
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=false
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh
+            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
+            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
+            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
+        command:
+            bash
+            # roslaunch panda_moveit_config demo.launch rviz_tutorial:=true
+            # roslaunch ur10_moveit_config demo.launch rviz_tutorial:=true
+    ros2base:
+        build:
+            context: ./docker/ros2base
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: ros2base
+        container_name: ros2base
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_DOMAIN_ID=1
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        command: bash
+    moveit2:
+        build:
+            context: ./docker/moveit2
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: moveit2
+        container_name: moveit2
         devices:
             - /dev/dri
         group_add:
@@ -86,5 +148,4 @@ services:
             - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
         command:
             bash
-            # roslaunch ur10_moveit_config demo.launch rviz_tutorial:=true
-
+            # ros2 launch moveit2_tutorials demo.launch.py

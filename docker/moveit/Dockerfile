@@ -1,6 +1,11 @@
+# Copyright 2024 - Andrew Kwok Fai LUI, Robotics and Autonomous System Group,
+# Research Engineering Facility, RI
+# the Queensland University of Technology
+
 FROM rosbase
 LABEL author "Andrew Lui <luia2@qut.edu.au>"
 
+ARG ROS_DISTRO=noetic
 ARG USER=qcr
 ENV MOVEIT_WS=/home/${USER}/moveit_ws
 WORKDIR /home/${USER}
@@ -8,9 +13,7 @@ SHELL ["/bin/bash", "-c"]
 
 # install moveit
 RUN sudo apt-get update
-RUN sudo apt-get install ros-noetic-moveit -y
-
-RUN pip install py-trees==2.2.3
+RUN sudo apt-get install ros-${ROS_DISTRO}-moveit -y
 
 # install py_trees, py-trees-msgs and rqt-py-trees are relevant in ROS 1 only
 # RUN sudo apt-get install \
@@ -18,6 +21,8 @@ RUN pip install py-trees==2.2.3
 #     ros-${ROS_DISTRO}-py-trees-msgs \
 #     ros-${ROS_DISTRO}-py-trees-ros \
 #     ros-${ROS_DISTRO}-rqt-py-trees -y
+
+RUN pip install py-trees==2.2.3
 RUN sudo apt-get install ros-${ROS_DISTRO}-rqt-py-trees -y
 
 # install other packages (robot specific)
@@ -28,8 +33,8 @@ RUN sudo apt-get install ros-${ROS_DISTRO}-ur10-moveit-config -y
 RUN mkdir -p ${MOVEIT_WS}/src
 RUN cd ${MOVEIT_WS}/src && \
     git clone https://github.com/ros-planning/moveit_tutorials.git -b master
-# RUN cd ${MOVEIT_WS}/src && \
-#     git clone https://github.com/ros-planning/panda_moveit_config.git -b noetic-devel 
+RUN cd ${MOVEIT_WS}/src && \
+    git clone https://github.com/ros-planning/panda_moveit_config.git -b noetic-devel 
 
 RUN cd ${MOVEIT_WS} && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO} 
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \

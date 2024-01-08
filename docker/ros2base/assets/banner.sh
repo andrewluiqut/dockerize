@@ -17,25 +17,16 @@ ROS_STATUS="${RED}DEAD${NC}"
 # Check if rostopic list command results in an error
 # Send output (stdout and stderr) to /dev/null (to mute to user)
 
-curl -s $ROS_MASTER_URI > /dev/null
-
-if [ "$?" == "0" ]; then
-    ROS_STATUS="${GREEN}ALIVE${NC}"
+if [ -n "${ROS_VERSION}" ]; then 
+  echo -e "> ROS Version:\t\t\tROS $ROS_VERSION ($ROS_VERSION)"
 fi
 
 if [ -n "${ROS_DISTRO}" ]; then 
-  echo -e "> ROS Version:\t\t\tROS $ROS_DISTRO ($ROS_DISTRO)"
-fi
-echo -e "> ROS Master:\t\t\t$ROS_MASTER_URI"
-# Check optional ROS_IP param has been set or not
-if [ -z ${ROS_IP+x} ]; then
-    # Not set, so display message and path for setting
-    echo -e "> ROS IP:\t\t\tNOT SET"
-else
-    # Set so display diagnostic
-    echo -e "> ROS IP:\t\t\t$ROS_IP"
+  echo -e "> ROS Distro:\t\t\tROS $ROS_DISTRO ($ROS_DISTRO)"
 fi
 
-echo -e "> Roscore Status:\t\t$ROS_STATUS"
+if [ -n "${ROS_DOMAIN_ID}" ]; then 
+  echo -e "> ROS Domain ID:\t\t\t $ROS_DOMAIN_ID "
+fi
 
 echo "##########################################################################"
