@@ -85,9 +85,10 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
             - ~/.ssh:/home/qcr/.ssh
-            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
-            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
-            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
+            # Might be good to make this mapping general (for easier deployment across different projects) if the structure is relatively the same
+            - ~/ros_workspaces/shorts_ph3_ws/src/robot_agent:/home/qcr/moveit_ws/src/robot_agent:rw
+            - ~/ros_workspaces/shorts_ph3_ws/src/shorts_scene:/home/qcr/moveit_ws/src/robot_scene:rw
+            - ~/ros_workspaces/shorts_ph3_ws/src/shorts_scene_config:/home/qcr/moveit_ws/src/robot_scene_config:rw            
         command:
             bash
             # roslaunch panda_moveit_config demo.launch rviz_tutorial:=true
@@ -99,7 +100,8 @@ services:
             args: 
                 USER: qcr
         image: ros2base
-        container_name: ros2base
+        # Would be good to make this name reflect the version of ROS2 (i.e., ros2_humble)
+        container_name: ros2_humble
         stdin_open: true
         tty: true
         privileged: true
