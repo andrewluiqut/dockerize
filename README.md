@@ -105,6 +105,8 @@ To remove all stopped containers, use the following. Beware that removing a cont
 docker container prune
 ``` 
 
+Note that the compose function only works within the local directory (where the docker compose yaml has been specified). If a container has been created for a composed image, simply use the default Docker commands (i.e., docker exec or run) to interact with the running container (if outside the context of the compose folder)
+
 Refer to the [Docker CLI reference documentation](https://docs.docker.com/engine/reference/commandline/container_ls/) for all the available commands.
 
 ## Comparision between Docker Compose and Dockerfile
@@ -132,7 +134,7 @@ docker run -it --net=host \
     rosbase \
     bash
 ```
-The troublesom long command is not desirable. This is where Docker Compose can come and rescue. The command can be transformed as a Docker Compose service and specified in a docker compose yaml file. The following contains the configurations in the above long command and more.
+The troublesome long command is not desirable. This is where Docker Compose can come to the rescue. The command can be transformed as a Docker Compose service and specified in a docker compose yaml file. The following contains the configurations in the above long command and more.
 ```
 version: '3'
 services:

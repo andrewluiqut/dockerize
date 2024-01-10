@@ -2,7 +2,7 @@
 
 A project may use one or more docker images to manage diversity in system environments and configurations. For example, one can build a ROS 1 image and a ROS 2 image for certain applications/drivers that are tied to the respective ROS versions. After resolving the ROS 1 bridging issue, docker compose can then be applied to start the two images on a host computer.
 
-The appropriate number of images and what constitute an __good__ image is not discussed in detail here. Some tips are given below.
+The appropriate number of images and what constitute a __good__ image is not discussed in detail here. Some tips are given below.
 
 * Applications/services that share the same system environment and are likely to be needed together (forming a logical component) can be packaged in the same image.
 * An application/service that 
