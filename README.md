@@ -2,7 +2,7 @@
 
 This repo contains files for docker-based setup of system environments. The types of system environments are relevant for project development work of the Robotics and Autonomous Systems (RAS) group and the QUT Centre for Robotics (QCR).
 
-The setup files comprise of specifications of layered entities in the docker/docker compose framework, namely, Dockerfiles and Docker-Compose (yaml) files. 
+The setup files compose of specifications of layered entities in the docker/docker compose framework, namely, Dockerfiles and Docker-Compose (yaml) files. 
 
 * A Dockerfile specifies the scripts for building a docker image, which is a template of executable system environments. 
 * A Docker-Compose (yaml) file specifies the commands for running one or more docker containers based on a docker image. Each executing instance is known as a service. Optionally it comprises the specifications for building docker images, connecting to prescribed system services, disk volumes, and other system entities.
@@ -13,13 +13,13 @@ Currently the image specifications mainly emerge from development of robotic app
 
 | Images | Remarks | Depends on |
 | ------------- | ------------- | ------ |
-| `rosbase`  | ROS 1 + Ubuntu 20.04  | Nil       |
+| `rosbase`  | ROS 1 (Noetic) + Ubuntu 20.04  | Nil       |
 | `nvidia`  | Ubuntu 20.04 with Nvidia drivers  | Nil   |
-| `rosbase-gpu` | ROS 1 + Nvidia | `rosbase` |
-| `armer` | ROS 1 + Armer | `rosbase` |
-| `moveit` | ROS 1 + Moveit version 1 | `rosbase` |
-| `ros2base` | ROS 2 + Ubuntu 22.04 | Nil |
-| `moveit2` | ROS 2 + Moveit version 2 | `ros2base` |
+| `rosbase-gpu` | ROS 1 (Noetic) + Nvidia | `rosbase` |
+| `armer` | ROS 1 (Noetic)+ Armer | `rosbase` |
+| `moveit` | ROS 1 (Noetic) + Moveit version 1 | `rosbase` |
+| `ros2base` | ROS 2 (Humble) + Ubuntu 22.04 | Nil |
+| `moveit2` | ROS 2 (Humble) + Moveit version 2 | `ros2base` |
 
 ## File Organization
 
