@@ -167,6 +167,23 @@ services:
 
 Refer to the [Setup of New Image](./SETUP.md) for suggestions and tips.
 
+## Running a Docker Image at System Bootup
+
+At the QCR, some computer platforms are always the hosts of a particular docker image/container. In particular, end-users with little of no docker experience will appreciate a transparent docker setup.   
+
+The following solution offers a way to get an image/container to be started without the user performing any action.
+
+[Stack Overflow Solution](https://stackoverflow.com/questions/30449313/how-do-i-make-a-docker-container-start-automatically-on-system-boot/39493500#39493500)
+
+## Hosting a Local Docker Hub
+
+A local docker hub (docker image distribution) will be handy for computer platform management at the QCR. RAS engineers and QCR users can pull generic images and push project/user specific images.
+
+Docker offers an official docker image for setting up such a local docker hub (called docker registry). Refer to teh following webpage for the instructions.
+
+[How to Use Your Own Registry](https://www.docker.com/blog/how-to-use-your-own-registry-2/)
+
+
 ## Author
 
 Dr Andrew Lui, Senior Research Engineer <br />
