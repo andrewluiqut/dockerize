@@ -58,14 +58,14 @@ services:
                 USER: qcr
         image: rosbase-gpu
         container_name: rosbase-gpu
-    ur_moveit:
+    moveit:
         build:
             context: ./docker/ur_moveit
             dockerfile: Dockerfile
             args: 
                 USER: qcr
-        image: ur_moveit
-        container_name: ur_moveit
+        image: moveit
+        container_name: moveit
         devices:
             - /dev/dri
         group_add:
@@ -112,14 +112,14 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         command: bash
-    ur_moveit2:
+    moveit2:
         build:
-            context: ./docker/ur_moveit2
+            context: ./docker/moveit2
             dockerfile: Dockerfile
             args: 
                 USER: qcr
-        image: ur_moveit2
-        container_name: ur_moveit2
+        image: moveit2
+        container_name: moveit2
         devices:
             - /dev/dri
         group_add:
@@ -130,8 +130,6 @@ services:
         environment:
             - DISPLAY
             - QT_X11_NO_MITSHM=1
-            - ROS_MASTER=true
-            - ROS_MASTER_URI=http://localhost:11311
         network_mode: host
         ipc: host
         volumes:
