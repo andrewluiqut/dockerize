@@ -139,3 +139,30 @@ services:
             - ~/.ssh:/home/qcr/.ssh
         command:
             bash
+    panda_moveit2:
+        build:
+            context: ./docker/panda_moveit2
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: panda_moveit2
+        container_name: panda_moveit2
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh
+        command:
+            bash
