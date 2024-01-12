@@ -58,14 +58,14 @@ services:
                 USER: qcr
         image: rosbase-gpu
         container_name: rosbase-gpu
-    moveit:
+    ur_moveit:
         build:
-            context: ./docker/moveit
+            context: ./docker/ur_moveit
             dockerfile: Dockerfile
             args: 
                 USER: qcr
-        image: moveit
-        container_name: moveit
+        image: ur_moveit
+        container_name: ur_moveit
         devices:
             - /dev/dri
         group_add:
@@ -84,15 +84,9 @@ services:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
-            - ~/.ssh:/home/qcr/.ssh
-            # Might be good to make this mapping general (for easier deployment across different projects) if the structure is relatively the same
-            - ~/ros_workspaces/shorts_ph3_ws/src/robot_agent:/home/qcr/moveit_ws/src/robot_agent:rw
-            - ~/ros_workspaces/shorts_ph3_ws/src/shorts_scene:/home/qcr/moveit_ws/src/robot_scene:rw
-            - ~/ros_workspaces/shorts_ph3_ws/src/shorts_scene_config:/home/qcr/moveit_ws/src/robot_scene_config:rw            
+            - ~/.ssh:/home/qcr/.ssh            
         command:
             bash
-            # roslaunch panda_moveit_config demo.launch rviz_tutorial:=true
-            # roslaunch ur10_moveit_config demo.launch rviz_tutorial:=true
     ros2base:
         build:
             context: ./docker/ros2base
@@ -118,14 +112,14 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
         command: bash
-    moveit2:
+    ur_moveit2:
         build:
-            context: ./docker/moveit2
+            context: ./docker/ur_moveit2
             dockerfile: Dockerfile
             args: 
                 USER: qcr
-        image: moveit2
-        container_name: moveit2
+        image: ur_moveit2
+        container_name: ur_moveit2
         devices:
             - /dev/dri
         group_add:
@@ -145,9 +139,5 @@ services:
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
             - ~/.ssh:/home/qcr/.ssh
-            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
-            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
-            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
         command:
             bash
-            # ros2 launch moveit2_tutorials demo.launch.py
