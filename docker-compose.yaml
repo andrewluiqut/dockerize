@@ -60,7 +60,7 @@ services:
         container_name: rosbase-gpu
     moveit:
         build:
-            context: ./docker/ur_moveit
+            context: ./docker/moveit
             dockerfile: Dockerfile
             args: 
                 USER: qcr
