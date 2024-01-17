@@ -23,7 +23,6 @@ RUN sudo apt-get install ros-${ROS_DISTRO}-moveit -y
 #     ros-${ROS_DISTRO}-rqt-py-trees -y
 
 RUN pip install py-trees==2.2.3
-RUN sudo apt-get install ros-${ROS_DISTRO}-rqt-py-trees -y
 
 # install other packages (robot specific)
 # RUN sudo apt-get install ros-${ROS_DISTRO}-universal-robots -y

@@ -61,7 +61,7 @@ services:
     moveit:
         build:
             context: ./docker/moveit
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile 
             args: 
                 USER: qcr
         image: moveit

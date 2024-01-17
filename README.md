@@ -68,7 +68,7 @@ docker compose build armer
 ```
 ![Layered Docker Image for armer](./images/ArmerDockerLayers.png)
 
-There are at least two ways to create a new container (an instance of executing image) and execute it.
+There are at least two ways to create a new container (an instance of executing image) and execute it. Note that executing docker compose in the folder that contains the docker compose yaml file.
 
 Using docker compose up
 ```
