@@ -149,3 +149,29 @@ services:
         command:
             bash
             # ros2 launch moveit2_tutorials demo.launch.py
+    workshop:
+        # image: nvidia/cudagl:11.3.0-devel
+        image: moveit
+        container_name: workshop
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=false
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh  
+            - ~/moveit_ws/src/toy_project:/home/qcr/moveit_ws/src/toy_project:rw        
+        command:
+            bash

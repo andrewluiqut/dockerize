@@ -88,10 +88,24 @@ The terminated container goes into a dormant state, which can be later restarted
  ```
  docker container ls
  ```
-To execute commands on a currently running container, use docker compose exec. The following command starts a bash shell in the currently running container called `armer`.
+To execute commands on a currently running container, use docker compose exec. The following command starts a bash shell in the currently running container called `armer`.  
 ```
 docker compose exec armer bash
 ```
+Note that docker compose commands must be executed in a folder where the corresponding `docker-compose.yaml` file is located.  If the current directory is somewhere else, use the `-f` or `--file` option to specify the location of the yaml file.  Multiple configuration yaml files may be included.
+
+```
+docker compose -f ../compose.yaml exec moveit bash
+```
+
+In docker the images are managed by the Docker Engine which can be accessed anywhere with the Docker CLI. An alternative command for executing a bash command in the `moveit` container is given below.
+
+```
+docker exec -it <CONTAINER NAME> bash
+```
+The next section gives a brief comparision of the Docker CLI and the Docker Compose CLI.
+
+
 Refer to [Docker Compose CLI reference](https://docs.docker.com/compose/reference/) for details of all available docker compose commands.
 
 ### Docker CLI and Docker Compose CLI
@@ -107,7 +121,7 @@ docker container prune
 
 Refer to the [Docker CLI reference documentation](https://docs.docker.com/engine/reference/commandline/container_ls/) for all the available commands.
 
-## Comparision between Docker Compose and Dockerfile
+## Comparision between Docker Compose YAML and Dockerfile
 
 Essentially, Docker Compose makes running images (as containers) easier. An example based on the `rosbase` image (ROS 1) is given below. First build the `rosbase` image using a Dockerfile in the same folder.
 ```
@@ -162,6 +176,32 @@ services:
             - /etc/localtime:/etc/localtime:ro
         command: bash
 ``` 
+## Dangling Docker Images and Forgetful Containers
+
+A common _mess_ of docker-based work is the emergence of more and more containers that are not used. Many of these are due to applications that create them ignoring to have them destroyed (for example, visual studio code) and users who are forgetful.
+
+To list the containers in the docker enginer (essentially the same):
+```
+docker ps
+
+docker container ls
+```
+To remove a particular container:
+```
+docker rm <CONTAINER_NAME>
+```
+To remove all stopped containers:
+```
+docker container prune
+```
+Note: removing a container is irreverible - the storage is destroyed immediately (except the mounted volumes which come from somewhere).
+
+Sometimes, the number of images can also get out of hand - again the untidyness of the user is to be blamed. 
+
+To remove dangling images
+```
+docker rmi $(docker images -f "dangling=true" -q)
+```
 
 ## Creating New Images for a Project
 
@@ -183,6 +223,10 @@ Docker offers an official docker image for setting up such a local docker hub (c
 
 [How to Use Your Own Registry](https://www.docker.com/blog/how-to-use-your-own-registry-2/)
 
+
+## Containarized Development
+
+Refer to the [Workshop: Containerized Development with Docker and Visual Studio Code](./CONTAINER_DEV.md) page.
 
 ## Author
 
