@@ -76,7 +76,7 @@ services:
         environment:
             - DISPLAY
             - QT_X11_NO_MITSHM=1
-            - ROS_MASTER=false
+            - ROS_MASTER=true
             - ROS_MASTER_URI=http://localhost:11311
         network_mode: host
         ipc: host
@@ -84,15 +84,26 @@ services:
             - /tmp/.X11-unix:/tmp/.X11-unix:rw
             - /etc/timezone:/etc/timezone:ro
             - /etc/localtime:/etc/localtime:ro
-            - ~/.ssh:/home/qcr/.ssh
-            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
-            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
-            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
-            - ~/moveit_ws/src/toy_project:/home/qcr/cgras_moveit_ws/src/toy_project:rw            
+            - ~/.ssh:/home/qcr/.ssh           
         command:
             bash
-            # roslaunch panda_moveit_config demo.launch rviz_tutorial:=true
-            # roslaunch ur10_moveit_config demo.launch rviz_tutorial:=true
+    moveit-demo:
+        extends: 
+            service: moveit
+        container_name: moveit-demo
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=true
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
+            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
+            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw                        
+        command:
+            roslaunch panda_moveit_config demo.launch rviz_tutorial:=true           
     ros2base:
         build:
             context: ./docker/ros2base
