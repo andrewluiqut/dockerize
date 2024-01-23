@@ -10,6 +10,7 @@ version: '3'
 #   - Each has its own Dockerfile context for its own images (and required robot packages)
 services:
     xarm_humble_moveit:
+        container_name: xarm_humble_moveit
         extends:
             file: ../docker/base-compose.yaml
             service: moveit2
@@ -18,6 +19,7 @@ services:
             dockerfile: Dockerfile
         image: xarm_humble_moveit
     xarm_noetic_moveit:
+        container_name: xarm_noetic_moveit
         extends:
             file: ../docker/base-compose.yaml
             service: moveit
@@ -26,6 +28,7 @@ services:
             dockerfile: Dockerfile
         image: xarm_noetic_moveit
     panda_humble_moveit:
+        container_name: panda_humble_moveit
         extends:
             file: ../docker/base-compose.yaml
             service: moveit2
@@ -34,6 +37,7 @@ services:
             dockerfile: Dockerfile
         image: panda_humble_moveit
     abb_humble_moveit:
+        container_name: abb_humble_moveit
         extends:
             file: ../docker/base-compose.yaml
             service: moveit2

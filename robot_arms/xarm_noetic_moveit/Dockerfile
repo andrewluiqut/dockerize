@@ -44,7 +44,7 @@ RUN source ${ROBOT_WS}/devel/setup.bash && \
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN echo "source ${PROJECT_WS}/devel/setup.bash" >> ~/.bashrc 
 
-COPY ../ros1_entrypoint.sh /usr/local/bin/ros_catkin_entrypoint
+COPY ros1_entrypoint.sh /usr/local/bin/ros_catkin_entrypoint
 RUN sudo chmod +x /usr/local/bin/ros_catkin_entrypoint
 ENTRYPOINT ["/usr/local/bin/ros_catkin_entrypoint"]
 CMD ["bash"]

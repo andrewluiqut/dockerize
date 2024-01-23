@@ -9,23 +9,22 @@ include:
     - ./robot_arms/robot-arm-compose.yaml
 
 # Define Project Specific Services Here 
-# Example: xarm_test (extending the xarm_noetic_moveit image and adds volume mounts to project specific function)
+# The .env file can be updated to bring up a defined image for use with your project
 services:
     # ----- EXAMPLE IMPLEMENTATION --------
     # Rename service name as required
-    xarm_test:
+    robot_service:
         # Rename the container name as required
-        container_name: xarm_test
+        container_name: ${ROBOT}_container
         extends:
             # DO NOT CHANGE THIS FILE PATH
             file: ./robot_arms/robot-arm-compose.yaml
             # Update the extended service depending on the type of robot you need
-            # Expects <robot_type>_<ROS version>_<commander_type>
-            # Where:
-            #       robot_type: [xarm, panda, ur, abb]
-            #       ROS version: [noetic, humble]
-            #       commander_type: [moveit, armer]
-            service: xarm_noetic_moveit
-        # Uncomment and update the volume PATH and PACKAGE name as needed
-        # volumes: 
-        #     - <HOST PATH>/<PACKAGE>:/home/qcr/project_ws/src/<PACKAGE>:rw
+            # See .env
+            service: ${ROBOT}_${ROSVER}_${COMMANDER}
+        # Update the volume PATH and PACKAGE name as needed
+        # See .env
+        volumes: 
+            - ${WORKSPACE_PATH}/${SCENE_PKG}:/home/qcr/project_ws/src/${SCENE_PKG}:rw
+            - ${WORKSPACE_PATH}/${CONFIG_PKG}:/home/qcr/project_ws/src/${CONFIG_PKG}:rw
+            - ${WORKSPACE_PATH}/${COMMANDER_PKG}:/home/qcr/project_ws/src/${COMMANDER_PKG}:rw
