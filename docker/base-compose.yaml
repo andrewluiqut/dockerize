@@ -1,0 +1,102 @@
+# Copyright 2024 - Andrew Kwok Fai LUI and Dasun Gunasinghe
+# Research Engineering Facility, Queensland University of Technology (QUT)
+
+version: '3'
+
+# Contains the base image definitions, usable for most image configurations
+# NOTE:
+#   - rosbase and ros2base have the main definitions (stdin_open, tty, privaleged, etc.)
+#   - environments and volumes are captured as 'fragments' for reuse, typically ros1_envs, ros2_envs, and base_volumes 
+services:
+    rosbase:
+        build:
+            context: ./rosbase
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: rosbase
+        container_name: rosbase
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment: &ros1_envs
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=false
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes: &base_volumes
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh
+        command: bash
+    ros2base:
+        build:
+            context: ./ros2base
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: ros2base
+        container_name: ros2base
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment: &ros2_envs
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_DOMAIN_ID=1
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes: *base_volumes
+        command: bash
+    armer:
+        extends: 
+            service: rosbase
+        image: armer
+        container_name: armer
+        build:
+            context: ./armer
+            dockerfile: Dockerfile
+        command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
+        # command: bash
+    nvidia:
+        # image: nvidia/cudagl:11.3.0-devel
+        image: nvidia/cudagl:11.1.1-base-ubuntu20.04
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: 1
+                          capabilities: [gpu]
+        command: nvidia-smi
+    rosbase-gpu:
+        build:
+            context: ./rosbase
+            dockerfile: Dockerfile.nvidia
+            args: 
+                USER: qcr
+        image: rosbase-gpu
+        container_name: rosbase-gpu
+    moveit:
+        extends:
+            file: ./base-compose.yaml
+            service: rosbase
+        image: moveit
+        build:
+            context: ./moveit
+            dockerfile: Dockerfile      
+    moveit2:
+        extends:
+            file: ./base-compose.yaml
+            service: ros2base
+        image: moveit2
+        build:
+            context: ./moveit2
+            dockerfile: Dockerfile          

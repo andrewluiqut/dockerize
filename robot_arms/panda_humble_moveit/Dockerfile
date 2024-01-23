@@ -55,7 +55,7 @@ RUN cd ${ROBOT_WS} && \
 RUN echo "source /opt/ros/${ROS_DISTRO}/setup.bash" >> ~/.bashrc
 RUN echo "source ${ROBOT_WS}/install/setup.bash" >> ~/.bashrc 
 
-COPY entrypoint_setup.sh /usr/local/bin/ros_colcon_entrypoint
+COPY ../ros2_entrypoint.sh /usr/local/bin/ros_colcon_entrypoint
 RUN sudo chmod +x /usr/local/bin/ros_colcon_entrypoint
 ENTRYPOINT ["/usr/local/bin/ros_colcon_entrypoint"]
 CMD ["bash"]

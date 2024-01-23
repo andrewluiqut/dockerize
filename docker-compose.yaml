@@ -1,168 +1,31 @@
-# Copyright 2024 - Andrew Kwok Fai LUI, Robotics and Autonomous System Group,
-# Research Engineering Facility, RI
-# the Queensland University of Technology
+# Copyright 2024 - Andrew Kwok Fai LUI and Dasun Gunasinghe
+# Research Engineering Facility, Queensland University of Technology (QUT)
 
 version: '3'
+
+# Include Base/Default Packages
+include:
+    - ./docker/base-compose.yaml
+    - ./robot_arms/robot-arm-compose.yaml
+
+# Define Project Specific Services Here 
+# Example: xarm_test (extending the xarm_noetic_moveit image and adds volume mounts to project specific function)
 services:
-    rosbase:
-        build:
-            context: ./docker/rosbase
-            dockerfile: Dockerfile
-            args: 
-                USER: qcr
-        image: rosbase
-        container_name: rosbase
-        stdin_open: true
-        tty: true
-        privileged: true
-        environment:
-            - DISPLAY
-            - QT_X11_NO_MITSHM=1
-            - ROS_MASTER=false
-            - ROS_MASTER_URI=http://localhost:11311
-        network_mode: host
-        ipc: host
-        user: qcr
-        working_dir: /home/qcr
-        volumes:
-            - /tmp/.X11-unix:/tmp/.X11-unix:rw
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
-        command: bash
-    armer:
-        extends: 
-            service: rosbase
-        image: armer
-        container_name: armer
-        build:
-            context: ./docker/armer
-            dockerfile: Dockerfile
-        command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
-        # command: bash
-    nvidia:
-        # image: nvidia/cudagl:11.3.0-devel
-        image: nvidia/cudagl:11.1.1-base-ubuntu20.04
-        deploy:
-            resources:
-                reservations:
-                    devices:
-                        - driver: nvidia
-                          count: 1
-                          capabilities: [gpu]
-        command: nvidia-smi
-    rosbase-gpu:
-        build:
-            context: ./docker/rosbase
-            dockerfile: Dockerfile.nvidia
-            args: 
-                USER: qcr
-        image: rosbase-gpu
-        container_name: rosbase-gpu
-    moveit:
-        build:
-            context: ./docker/moveit
-            dockerfile: Dockerfile
-            args: 
-                USER: qcr
-        image: moveit
-        container_name: moveit
-        devices:
-            - /dev/dri
-        group_add:
-            - video
-        stdin_open: true
-        tty: true
-        privileged: true
-        environment:
-            - DISPLAY
-            - QT_X11_NO_MITSHM=1
-            - ROS_MASTER=false
-            - ROS_MASTER_URI=http://localhost:11311
-        network_mode: host
-        ipc: host
-        volumes:
-            - /tmp/.X11-unix:/tmp/.X11-unix:rw
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
-            - ~/.ssh:/home/qcr/.ssh            
-        command:
-            bash
-    ros2base:
-        build:
-            context: ./docker/ros2base
-            dockerfile: Dockerfile
-            args: 
-                USER: qcr
-        image: ros2base
-        # Would be good to make this name reflect the version of ROS2 (i.e., ros2_humble)
-        container_name: ros2_humble
-        stdin_open: true
-        tty: true
-        privileged: true
-        environment:
-            - DISPLAY
-            - QT_X11_NO_MITSHM=1
-            - ROS_DOMAIN_ID=1
-        network_mode: host
-        ipc: host
-        user: qcr
-        working_dir: /home/qcr
-        volumes:
-            - /tmp/.X11-unix:/tmp/.X11-unix:rw
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
-        command: bash
-    moveit2:
-        build:
-            context: ./docker/moveit2
-            dockerfile: Dockerfile
-            args: 
-                USER: qcr
-        image: moveit2
-        container_name: moveit2
-        devices:
-            - /dev/dri
-        group_add:
-            - video
-        stdin_open: true
-        tty: true
-        privileged: true
-        environment:
-            - DISPLAY
-            - QT_X11_NO_MITSHM=1
-        network_mode: host
-        ipc: host
-        volumes:
-            - /tmp/.X11-unix:/tmp/.X11-unix:rw
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
-            - ~/.ssh:/home/qcr/.ssh
-        command:
-            bash
-    panda_moveit2:
-        build:
-            context: ./docker/panda_moveit2
-            dockerfile: Dockerfile
-            args: 
-                USER: qcr
-        image: panda_moveit2
-        container_name: panda_moveit2
-        devices:
-            - /dev/dri
-        group_add:
-            - video
-        stdin_open: true
-        tty: true
-        privileged: true
-        environment:
-            - DISPLAY
-            - QT_X11_NO_MITSHM=1
-        network_mode: host
-        ipc: host
-        volumes:
-            - /tmp/.X11-unix:/tmp/.X11-unix:rw
-            - /etc/timezone:/etc/timezone:ro
-            - /etc/localtime:/etc/localtime:ro
-            - ~/.ssh:/home/qcr/.ssh
-        command:
-            bash
+    # ----- EXAMPLE IMPLEMENTATION --------
+    # Rename service name as required
+    xarm_test:
+        # Rename the container name as required
+        container_name: xarm_test
+        extends:
+            # DO NOT CHANGE THIS FILE PATH
+            file: ./robot_arms/robot-arm-compose.yaml
+            # Update the extended service depending on the type of robot you need
+            # Expects <robot_type>_<ROS version>_<commander_type>
+            # Where:
+            #       robot_type: [xarm, panda, ur, abb]
+            #       ROS version: [noetic, humble]
+            #       commander_type: [moveit, armer]
+            service: xarm_noetic_moveit
+        # Uncomment and update the volume PATH and PACKAGE name as needed
+        # volumes: 
+        #     - <HOST PATH>/<PACKAGE>:/home/qcr/project_ws/src/<PACKAGE>:rw
