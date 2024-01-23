@@ -11,14 +11,9 @@ ENV ROBOT_WS=/home/${USER}/robot_ws
 WORKDIR /home/${USER}
 SHELL ["/bin/bash", "-c"]
 
-# install moveit
+# Install moveit and other base packages 
 RUN sudo apt-get update
 RUN sudo apt-get install ros-${ROS_DISTRO}-moveit -y
-
-# TODO: this will be in a project specific image
-# # install other packages (robot specific) 
-# # UR drivers for ROS2: https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver
-# RUN sudo apt-get install ros-${ROS_DISTRO}-ur -y
 
 # workspace create and make for robot_ws 
 # TODO: add the Universal Robotics Driver repository (and others) needed to run on real robot
