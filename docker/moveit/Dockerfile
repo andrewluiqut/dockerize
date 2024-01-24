@@ -21,6 +21,7 @@ RUN sudo apt-get install ros-${ROS_DISTRO}-moveit -y
 RUN mkdir -p ${ROBOT_WS}/src
 RUN cd ${ROBOT_WS}/src && git clone --branch master https://github.com/ros-planning/moveit_tutorials.git
 RUN cd ${ROBOT_WS} && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO} 
+
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
     cd ${ROBOT_WS} && \
     catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3

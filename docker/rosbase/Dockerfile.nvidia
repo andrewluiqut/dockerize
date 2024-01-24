@@ -77,8 +77,6 @@ RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd6
 RUN sudo apt-get install -y ./google-chrome-stable_current_amd64.deb
 RUN rm ./google-chrome-stable_current_amd64.deb
 
-
-
 # configuration for terminator
 RUN mkdir -p /home/${USER}/.config/terminator
 COPY assets/terminator/terminator_config.txt /home/qcr/.config/terminator/config 
