@@ -2,7 +2,7 @@
 
 This repo contains files for docker-based setup of system environments. The types of system environments are relevant for project development work of the Robotics and Autonomous Systems (RAS) group and the QUT Centre for Robotics (QCR).
 
-The setup files comprise of specifications of layered entities in the docker/docker compose framework, namely, Dockerfiles and Docker-Compose (yaml) files. 
+The setup files compose of specifications of layered entities in the docker/docker compose framework, namely, Dockerfiles and Docker-Compose (yaml) files. 
 
 * A Dockerfile specifies the scripts for building a docker image, which is a template of executable system environments. 
 * A Docker-Compose (yaml) file specifies the commands for running one or more docker containers based on a docker image. Each executing instance is known as a service. Optionally it comprises the specifications for building docker images, connecting to prescribed system services, disk volumes, and other system entities.
@@ -13,13 +13,13 @@ Currently the image specifications mainly emerge from development of robotic app
 
 | Images | Remarks | Depends on |
 | ------------- | ------------- | ------ |
-| `rosbase`  | ROS 1 + Ubuntu 20.04  | Nil       |
+| `rosbase`  | ROS 1 (Noetic) + Ubuntu 20.04  | Nil       |
 | `nvidia`  | Ubuntu 20.04 with Nvidia drivers  | Nil   |
-| `rosbase-gpu` | ROS 1 + Nvidia | `rosbase` |
-| `armer` | ROS 1 + Armer | `rosbase` |
-| `moveit` | ROS 1 + Moveit version 1 | `rosbase` |
-| `ros2base` | ROS 2 + Ubuntu 22.04 | Nil |
-| `moveit2` | ROS 2 + Moveit version 2 | `ros2base` |
+| `rosbase-gpu` | ROS 1 (Noetic) + Nvidia | `rosbase` |
+| `armer` | ROS 1 (Noetic)+ Armer | `rosbase` |
+| `moveit` | ROS 1 (Noetic) + Moveit version 1 | `rosbase` |
+| `ros2base` | ROS 2 (Humble) + Ubuntu 22.04 | Nil |
+| `moveit2` | ROS 2 (Humble) + Moveit version 2 | `ros2base` |
 
 ## File Organization
 
@@ -119,6 +119,8 @@ To remove all stopped containers, use the following. Beware that removing a cont
 docker container prune
 ``` 
 
+Note that the compose function only works within the local directory (where the docker compose yaml has been specified). If a container has been created for a composed image, simply use the default Docker commands (i.e., docker exec or run) to interact with the running container (if outside the context of the compose folder)
+
 Refer to the [Docker CLI reference documentation](https://docs.docker.com/engine/reference/commandline/container_ls/) for all the available commands.
 
 ## Comparision between Docker Compose YAML and Dockerfile
@@ -146,7 +148,7 @@ docker run -it --net=host \
     rosbase \
     bash
 ```
-The troublesom long command is not desirable. This is where Docker Compose can come and rescue. The command can be transformed as a Docker Compose service and specified in a docker compose yaml file. The following contains the configurations in the above long command and more.
+The troublesome long command is not desirable. This is where Docker Compose can come to the rescue. The command can be transformed as a Docker Compose service and specified in a docker compose yaml file. The following contains the configurations in the above long command and more.
 ```
 version: '3'
 services:

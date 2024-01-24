@@ -1,0 +1,47 @@
+# Copyright 2024 - Andrew Kwok Fai LUI and Dasun Gunasinghe
+# Research Engineering Facility, Queensland University of Technology (QUT)
+
+version: '3'
+
+# Higher-Level Definitions of Robot Arm Images
+# This compose file defines the links to its extension and image build file
+# NOTE:
+#   - Each includes an extension of a derived base (largely moveit or moveit2)
+#   - Each has its own Dockerfile context for its own images (and required robot packages)
+services:
+    xarm_humble_moveit:
+        container_name: xarm_humble_moveit
+        extends:
+            file: ../docker/base-compose.yaml
+            service: moveit2
+        build:
+            context: ./xarm_humble_moveit
+            dockerfile: Dockerfile
+        image: xarm_humble_moveit
+    xarm_noetic_moveit:
+        container_name: xarm_noetic_moveit
+        extends:
+            file: ../docker/base-compose.yaml
+            service: moveit
+        build:
+            context: ./xarm_noetic_moveit
+            dockerfile: Dockerfile
+        image: xarm_noetic_moveit
+    panda_humble_moveit:
+        container_name: panda_humble_moveit
+        extends:
+            file: ../docker/base-compose.yaml
+            service: moveit2
+        build:
+            context: ./panda_humble_moveit
+            dockerfile: Dockerfile
+        image: panda_humble_moveit
+    abb_humble_moveit:
+        container_name: abb_humble_moveit
+        extends:
+            file: ../docker/base-compose.yaml
+            service: moveit2
+        build:
+            context: ./abb_humble_moveit
+            dockerfile: Dockerfile
+        image: abb_humble_moveit

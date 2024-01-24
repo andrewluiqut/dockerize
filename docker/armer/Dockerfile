@@ -12,24 +12,24 @@ ENV ARMER_WS=/home/${USER}/armer_ws
 WORKDIR /home/${USER}
 SHELL ["/bin/bash", "-c"]
 
-# install armer workspace
+# Install armer workspace
 RUN mkdir -p ${ARMER_WS}/src
 RUN cd ${ARMER_WS}/src && \ 
-git clone https://github.com/qcr/armer.git && \
-git clone https://github.com/qcr/armer_msgs
+git clone --branch feature-collision-handling https://github.com/qcr/armer.git && \
+git clone --branch feature-collision-handling https://github.com/qcr/armer_msgs.git && \
+git clone --branch main https://github.com/qcr/pointcloud_utils.git
 
-# add ros dependency
+# Add ros dependency
 RUN cd ${ARMER_WS} && rosdep install --from-paths src --ignore-src -r -y --rosdistro ${ROS_DISTRO} 
 
-# workspace create and make 
+# Workspace create and make 
 RUN source /opt/ros/${ROS_DISTRO}/setup.bash && \
 cd ${ARMER_WS} && \
 catkin_make -DPYTHON_EXECUTABLE=/usr/bin/python3
 
-# install roboticstoolbox
-RUN pip install roboticstoolbox-python
 # install python modules
 RUN pip install -r ${ARMER_WS}/src/armer/requirements.txt
+RUN cd ${ARMER_WS}/src/armer && python3 setup.py build_ext --build-lib=armer/cython/
 RUN pip install --force-reinstall spatialmath-python==1.0.0
 
 # copy entry point script
