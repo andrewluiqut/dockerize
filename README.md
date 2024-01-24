@@ -68,7 +68,7 @@ docker compose build armer
 ```
 ![Layered Docker Image for armer](./images/ArmerDockerLayers.png)
 
-There are at least two ways to create a new container (an instance of executing image) and execute it.
+There are at least two ways to create a new container (an instance of executing image) and execute it. Note that executing docker compose in the folder that contains the docker compose yaml file.
 
 Using docker compose up
 ```
@@ -88,10 +88,24 @@ The terminated container goes into a dormant state, which can be later restarted
  ```
  docker container ls
  ```
-To execute commands on a currently running container, use docker compose exec. The following command starts a bash shell in the currently running container called `armer`.
+To execute commands on a currently running container, use docker compose exec. The following command starts a bash shell in the currently running container called `armer`.  
 ```
 docker compose exec armer bash
 ```
+Note that docker compose commands must be executed in a folder where the corresponding `docker-compose.yaml` file is located.  If the current directory is somewhere else, use the `-f` or `--file` option to specify the location of the yaml file.  Multiple configuration yaml files may be included.
+
+```
+docker compose -f ../compose.yaml exec moveit bash
+```
+
+In docker the images are managed by the Docker Engine which can be accessed anywhere with the Docker CLI. An alternative command for executing a bash command in the `moveit` container is given below.
+
+```
+docker exec -it <CONTAINER NAME> bash
+```
+The next section gives a brief comparision of the Docker CLI and the Docker Compose CLI.
+
+
 Refer to [Docker Compose CLI reference](https://docs.docker.com/compose/reference/) for details of all available docker compose commands.
 
 ### Docker CLI and Docker Compose CLI
@@ -109,7 +123,7 @@ Note that the compose function only works within the local directory (where the 
 
 Refer to the [Docker CLI reference documentation](https://docs.docker.com/engine/reference/commandline/container_ls/) for all the available commands.
 
-## Comparision between Docker Compose and Dockerfile
+## Comparision between Docker Compose YAML and Dockerfile
 
 Essentially, Docker Compose makes running images (as containers) easier. An example based on the `rosbase` image (ROS 1) is given below. First build the `rosbase` image using a Dockerfile in the same folder.
 ```
@@ -164,10 +178,57 @@ services:
             - /etc/localtime:/etc/localtime:ro
         command: bash
 ``` 
+## Dangling Docker Images and Forgetful Containers
+
+A common _mess_ of docker-based work is the emergence of more and more containers that are not used. Many of these are due to applications that create them ignoring to have them destroyed (for example, visual studio code) and users who are forgetful.
+
+To list the containers in the docker enginer (essentially the same):
+```
+docker ps
+
+docker container ls
+```
+To remove a particular container:
+```
+docker rm <CONTAINER_NAME>
+```
+To remove all stopped containers:
+```
+docker container prune
+```
+Note: removing a container is irreverible - the storage is destroyed immediately (except the mounted volumes which come from somewhere).
+
+Sometimes, the number of images can also get out of hand - again the untidyness of the user is to be blamed. 
+
+To remove dangling images
+```
+docker rmi $(docker images -f "dangling=true" -q)
+```
 
 ## Creating New Images for a Project
 
 Refer to the [Setup of New Image](./SETUP.md) for suggestions and tips.
+
+## Running a Docker Image at System Bootup
+
+At the QCR, some computer platforms are always the hosts of a particular docker image/container. In particular, end-users with little of no docker experience will appreciate a transparent docker setup.   
+
+The following solution offers a way to get an image/container to be started without the user performing any action.
+
+[Stack Overflow Solution](https://stackoverflow.com/questions/30449313/how-do-i-make-a-docker-container-start-automatically-on-system-boot/39493500#39493500)
+
+## Hosting a Local Docker Hub
+
+A local docker hub (docker image distribution) will be handy for computer platform management at the QCR. RAS engineers and QCR users can pull generic images and push project/user specific images.
+
+Docker offers an official docker image for setting up such a local docker hub (called docker registry). Refer to teh following webpage for the instructions.
+
+[How to Use Your Own Registry](https://www.docker.com/blog/how-to-use-your-own-registry-2/)
+
+
+## Containarized Development
+
+Refer to the [Workshop: Containerized Development with Docker and Visual Studio Code](./CONTAINER_DEV.md) page.
 
 ## Author
 

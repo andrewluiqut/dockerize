@@ -11,6 +11,7 @@ include:
 # Define Project Specific Services Here 
 # The .env file can be updated to bring up a defined image for use with your project
 services:
+
     # ----- EXAMPLE IMPLEMENTATION --------
     # Rename service name as required
     robot_service:
@@ -28,3 +29,143 @@ services:
             - ${WORKSPACE_PATH}/${SCENE_PKG}:/home/qcr/project_ws/src/${SCENE_PKG}:rw
             - ${WORKSPACE_PATH}/${CONFIG_PKG}:/home/qcr/project_ws/src/${CONFIG_PKG}:rw
             - ${WORKSPACE_PATH}/${COMMANDER_PKG}:/home/qcr/project_ws/src/${COMMANDER_PKG}:rw
+    rosbase:
+        build:
+            context: ./docker/rosbase
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: rosbase
+        container_name: rosbase
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=false
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        command: bash
+    armer:
+        extends: 
+            service: rosbase
+        image: armer
+        container_name: armer
+        build:
+            context: ./docker/armer
+            dockerfile: Dockerfile
+        command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
+        # command: bash
+    nvidia:
+        # image: nvidia/cudagl:11.3.0-devel
+        image: nvidia/cudagl:11.1.1-base-ubuntu20.04
+        deploy:
+            resources:
+                reservations:
+                    devices:
+                        - driver: nvidia
+                          count: 1
+                          capabilities: [gpu]
+        command: nvidia-smi
+    rosbase-gpu:
+        build:
+            context: ./docker/rosbase
+            dockerfile: Dockerfile.nvidia
+            args: 
+                USER: qcr
+        image: rosbase-gpu
+        container_name: rosbase-gpu
+    moveit:
+        build:
+            context: ./docker/moveit
+            dockerfile: Dockerfile 
+            args: 
+                USER: qcr
+        image: moveit
+        container_name: moveit
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=true
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh           
+        command:
+            bash         
+    ros2base:
+        build:
+            context: ./docker/ros2base
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: ros2base
+        container_name: ros2base
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_DOMAIN_ID=1
+        network_mode: host
+        ipc: host
+        user: qcr
+        working_dir: /home/qcr
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+        command: bash
+    moveit2:
+        build:
+            context: ./docker/moveit2
+            dockerfile: Dockerfile
+            args: 
+                USER: qcr
+        image: moveit2
+        container_name: moveit2
+        devices:
+            - /dev/dri
+        group_add:
+            - video
+        stdin_open: true
+        tty: true
+        privileged: true
+        environment:
+            - DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_MASTER=true
+            - ROS_MASTER_URI=http://localhost:11311
+        network_mode: host
+        ipc: host
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - /etc/timezone:/etc/timezone:ro
+            - /etc/localtime:/etc/localtime:ro
+            - ~/.ssh:/home/qcr/.ssh
+            - ~/cgras_moveit_ws/src/cgras_robot:/home/qcr/cgras_moveit_ws/src/cgras_robot:rw
+            - ~/cgras_moveit_ws/src/cgras_scene:/home/qcr/cgras_moveit_ws/src/cgras_scene:rw
+            - ~/cgras_moveit_ws/src/cgras_scene_config:/home/qcr/cgras_moveit_ws/src/cgras_scene_config:rw            
+        command:
+            bash
+            # ros2 launch moveit2_tutorials demo.launch.py
