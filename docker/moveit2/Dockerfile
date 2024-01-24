@@ -11,19 +11,24 @@ ENV ROBOT_WS=/home/${USER}/robot_ws
 WORKDIR /home/${USER}
 SHELL ["/bin/bash", "-c"]
 
-# Install moveit and other base packages 
+# -- Install setuptools specific version to mitigate deprecation warning on colcon build
+RUN pip install setuptools==58.2.0
+
+# -- Install base packages 
 RUN sudo apt-get update
-RUN sudo apt-get install ros-${ROS_DISTRO}-moveit -y
+RUN sudo apt-get install python3-rosdep \
+    python3-colcon-common-extensions\
+    python3-colcon-mixin -y
 
 # workspace create and make for robot_ws 
 # TODO: add the Universal Robotics Driver repository (and others) needed to run on real robot
 # NOTE: the simulated version has its own docker image (needs investigation)
 RUN mkdir -p ${ROBOT_WS}/src
-RUN cd ${ROBOT_WS}/src && git clone --branch humble https://github.com/ros-planning/moveit2_tutorials.git
+RUN cd ${ROBOT_WS}/src && git clone https://github.com/ros-planning/moveit2_tutorials.git
 RUN cd ${ROBOT_WS}/src && vcs import < moveit2_tutorials/moveit2_tutorials.repos
 
 # build colcon workspace for the moveit2 tutorial
-RUN sudo apt update 
+RUN sudo apt-get update 
 RUN cd ${ROBOT_WS} && rosdep install -r --from-paths . --ignore-src --rosdistro ${ROS_DISTRO} -y
 RUN colcon mixin add default https://raw.githubusercontent.com/colcon/colcon-mixin-repository/master/index.yaml
 RUN colcon mixin update default

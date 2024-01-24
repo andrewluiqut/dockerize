@@ -14,9 +14,7 @@ SHELL [ "/bin/bash", "-c" ]
 RUN pip install py-trees==2.2.3
 
 # -- Install any other required packages
-RUN sudo apt-get install ros-${ROS_DISTRO}-moveit-servo \
-    ros-${ROS_DISTRO}-ros2-controllers \
-    libpoco-dev -y
+RUN sudo apt-get install ros-${ROS_DISTRO}-ros2-controllers libpoco-dev -y
 
 # -- Workspace create and make for robot_ws - sets up the ABB ROS2 drivers for use 
 # NOTE: overlaid on base ros2 humble source
