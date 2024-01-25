@@ -6,6 +6,7 @@ version: '3'
 # Include Base/Default Packages
 include:
     - ./docker/base-compose.yaml
+    - ./sensors/sensor-compose.yaml
     - ./robot_arms/robot-arm-compose.yaml
 
 # Define Project Specific Services Here 
