@@ -29,4 +29,5 @@ services:
             - ${WORKSPACE_PATH}/${SCENE_PKG}:/home/qcr/project_ws/src/${SCENE_PKG}:rw
             - ${WORKSPACE_PATH}/${CONFIG_PKG}:/home/qcr/project_ws/src/${CONFIG_PKG}:rw
             - ${WORKSPACE_PATH}/${COMMANDER_PKG}:/home/qcr/project_ws/src/${COMMANDER_PKG}:rw
+            - ${WORKSPACE_PATH}/moveit2:/home/qcr/project_ws/src/moveit2:rw
     

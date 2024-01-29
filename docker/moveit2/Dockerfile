@@ -13,11 +13,14 @@ SHELL ["/bin/bash", "-c"]
 
 # -- Install setuptools specific version to mitigate deprecation warning on colcon build
 RUN pip install setuptools==58.2.0
+RUN pip install transforms3d
+RUN pip install spatialmath-python
 
 # -- Install base packages 
 RUN sudo apt-get update
 RUN sudo apt-get install python3-rosdep \
     python3-colcon-common-extensions\
+    ros-${ROS_DISTRO}-tf-transformations\
     python3-colcon-mixin -y
 
 # workspace create and make for robot_ws 
