@@ -17,7 +17,7 @@ services:
         # Rename the container name as required
         container_name: ${ROBOT}_container
         extends:
-            # DO NOT CHANGE THIS FILE PATH
+            # DO NOT CHANGE THIS FILE
             file: robot-arm-compose.yaml
             # Update the extended service depending on the type of robot you need
             # See .env
