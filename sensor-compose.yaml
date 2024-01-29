@@ -12,10 +12,10 @@ services:
     realsense_noetic:
         container_name: realsense_noetic
         extends:
-            file: ../docker/base-compose.yaml
+            file: base-compose.yaml
             service: rosbase
         build:
-            context: ./realsense_noetic
+            context: ./sensors/realsense_noetic
             dockerfile: Dockerfile
         image: realsense_noetic
         volumes:

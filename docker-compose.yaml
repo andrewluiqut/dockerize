@@ -5,22 +5,21 @@ version: '3'
 
 # Include Base/Default Packages
 include:
-    - ./docker/base-compose.yaml
-    - ./sensors/sensor-compose.yaml
-    - ./robot_arms/robot-arm-compose.yaml
+    - base-compose.yaml
+    - sensor-compose.yaml
+    - robot-arm-compose.yaml
 
 # Define Project Specific Services Here 
 # The .env file can be updated to bring up a defined image for use with your project
 services:
-
     # ----- EXAMPLE IMPLEMENTATION --------
     # Rename service name as required
     robot_service:
         # Rename the container name as required
         container_name: ${ROBOT}_container
         extends:
-            # DO NOT CHANGE THIS FILE PATH
-            file: ./robot_arms/robot-arm-compose.yaml
+            # DO NOT CHANGE THIS FILE
+            file: robot-arm-compose.yaml
             # Update the extended service depending on the type of robot you need
             # See .env
             service: ${ROBOT}_${ROSVER}_${COMMANDER}
