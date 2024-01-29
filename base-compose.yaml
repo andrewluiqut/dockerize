@@ -10,7 +10,7 @@ version: '3'
 services:
     rosbase:
         build:
-            context: ./rosbase
+            context: ./docker/rosbase
             dockerfile: Dockerfile
             args: 
                 USER: qcr
@@ -36,7 +36,7 @@ services:
         command: bash
     ros2base:
         build:
-            context: ./ros2base
+            context: ./docker/ros2base
             dockerfile: Dockerfile
             args: 
                 USER: qcr
@@ -61,7 +61,7 @@ services:
         image: armer
         container_name: armer
         build:
-            context: ./armer
+            context: ./docker/armer
             dockerfile: Dockerfile
         command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
         # command: bash
@@ -70,7 +70,7 @@ services:
             service: rosbase
         image: moveit
         build:
-            context: ./moveit
+            context: ./docker/moveit
             dockerfile: Dockerfile
         command: bash
     moveit2:
@@ -78,7 +78,7 @@ services:
             service: ros2base
         image: moveit2
         build:
-            context: ./moveit2
+            context: ./docker/moveit2
             dockerfile: Dockerfile
         command: bash
     nvidia:
@@ -94,7 +94,7 @@ services:
         command: nvidia-smi
     rosbase-gpu:
         build:
-            context: ./rosbase
+            context: ./docker/rosbase
             dockerfile: Dockerfile.nvidia
             args: 
                 USER: qcr
