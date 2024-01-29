@@ -12,36 +12,36 @@ services:
     xarm_humble_moveit:
         container_name: xarm_humble_moveit
         extends:
-            file: ../docker/base-compose.yaml
+            file: base-compose.yaml
             service: moveit2
         build:
-            context: ./xarm_humble_moveit
+            context: ./robot_arms/xarm_humble_moveit
             dockerfile: Dockerfile
         image: xarm_humble_moveit
     xarm_noetic_moveit:
         container_name: xarm_noetic_moveit
         extends:
-            file: ../docker/base-compose.yaml
+            file: base-compose.yaml
             service: moveit
         build:
-            context: ./xarm_noetic_moveit
+            context: ./robot_arms/xarm_noetic_moveit
             dockerfile: Dockerfile
         image: xarm_noetic_moveit
     panda_humble_moveit:
         container_name: panda_humble_moveit
         extends:
-            file: ../docker/base-compose.yaml
+            file: base-compose.yaml
             service: moveit2
         build:
-            context: ./panda_humble_moveit
+            context: ./robot_arms/panda_humble_moveit
             dockerfile: Dockerfile
         image: panda_humble_moveit
     abb_humble_moveit:
         container_name: abb_humble_moveit
         extends:
-            file: ../docker/base-compose.yaml
+            file: base-compose.yaml
             service: moveit2
         build:
-            context: ./abb_humble_moveit
+            context: ./robot_arms/abb_humble_moveit
             dockerfile: Dockerfile
         image: abb_humble_moveit

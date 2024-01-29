@@ -65,6 +65,22 @@ services:
             dockerfile: Dockerfile
         command: stdbuf -o L roslaunch armer armer.launch config:=/home/qcr/armer_ws/src/armer/cfg/panda_sim.yaml
         # command: bash
+    moveit:
+        extends:
+            service: rosbase
+        image: moveit
+        build:
+            context: ./moveit
+            dockerfile: Dockerfile
+        command: bash
+    moveit2:
+        extends:
+            service: ros2base
+        image: moveit2
+        build:
+            context: ./moveit2
+            dockerfile: Dockerfile
+        command: bash
     nvidia:
         # image: nvidia/cudagl:11.3.0-devel
         image: nvidia/cudagl:11.1.1-base-ubuntu20.04
@@ -83,20 +99,4 @@ services:
             args: 
                 USER: qcr
         image: rosbase-gpu
-        container_name: rosbase-gpu
-    moveit:
-        extends:
-            file: ./base-compose.yaml
-            service: rosbase
-        image: moveit
-        build:
-            context: ./moveit
-            dockerfile: Dockerfile      
-    moveit2:
-        extends:
-            file: ./base-compose.yaml
-            service: ros2base
-        image: moveit2
-        build:
-            context: ./moveit2
-            dockerfile: Dockerfile          
+        container_name: rosbase-gpu             
