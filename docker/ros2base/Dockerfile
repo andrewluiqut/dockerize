@@ -58,10 +58,12 @@ gdb
 RUN sudo apt-get install -y \
 python3-pip \
 python3-rosdep \
-python3-setuptools
+python3-setuptool\
+ros-${ROS_DISTRO}-tf-transformationss
 
 # install jypyter-ros for running ros in jupyter notebook
 RUN pip install numpy==1.24.4 notebook==6.5.5 jupyros
+RUN pip install transforms3d
 
 # install chrome
 RUN wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
