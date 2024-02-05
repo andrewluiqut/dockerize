@@ -58,8 +58,8 @@ gdb
 RUN sudo apt-get install -y \
 python3-pip \
 python3-rosdep \
-python3-setuptool\
-ros-${ROS_DISTRO}-tf-transformationss
+python3-setuptools \
+ros-${ROS_DISTRO}-tf-transformations
 
 # install jypyter-ros for running ros in jupyter notebook
 RUN pip install numpy==1.24.4 notebook==6.5.5 jupyros
