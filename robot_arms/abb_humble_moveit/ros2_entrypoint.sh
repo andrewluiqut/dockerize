@@ -8,7 +8,7 @@ ls $PROJECT_WS/src
 # Build of Project Workspace
 echo "> Building and Sourcing $PROJECT_WS"
 source "$PROJECT_WS/install/setup.bash"
-cd $PROJECT_WS && colcon build
+cd $PROJECT_WS && colcon build --symlink-install
 source "$PROJECT_WS/install/setup.bash"
 
 # Run CMD from Dockerfile or the overriding command from docker compose yaml file
